@@ -26,7 +26,7 @@ export default class PlayerCard extends React.Component {
 	}
 
 	fetchRole(id) {
-		firebase.database
+		firebase.database()
 			.ref("gamerooms" + this.state.gameId + this.state.id)
 			.once("value", snapshot => {
 				this.setState({
@@ -34,7 +34,7 @@ export default class PlayerCard extends React.Component {
 				});
 			})
 			.then(
-				firebase.database
+				firebase.database()
 					.ref("roles" + this.state.roleType)
 					.once("value", snapshot =>
 						this.setState({

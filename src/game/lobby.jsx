@@ -1,4 +1,5 @@
 import React from "react";
+import { values } from "lodash";
 
 const { firebase } = window;
 
@@ -7,7 +8,7 @@ export default class Lobby extends React.Component {
 		super(props);
 		this.state = {
 			id: this.props.match.params.id,
-			player: {}
+			players: {}
 		};
 	}
 
@@ -16,9 +17,13 @@ export default class Lobby extends React.Component {
 	}
 
 	fetchPlayers(id) {
-		let players = firebase.database
-			.ref("gamerooms/" + id)
+
+		let players = firebase
+			.database()
+			.ref("gamerooms/")
+			.child(this.state.id)
 			.once("value", snapshot => {
+        debugger
 				this.setState({
 					players: snapshot.val().players
 				});
@@ -26,7 +31,9 @@ export default class Lobby extends React.Component {
 	}
 
 	render() {
-		let allPlayers = this.state.player.map(player => <div>{player.name}</div>);
+		let allPlayers = values(this.state.players).map(player => (
+			<div key={player.id}>{player.name}</div>
+		));
 
 		return (
 			<div>
