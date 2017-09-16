@@ -1,6 +1,5 @@
 import React from "react";
 
-const { firebase } = window;
 
 export default class LiveGame extends React.Component {
 	constructor(props) {
@@ -16,15 +15,15 @@ export default class LiveGame extends React.Component {
 		};
 	}
 
-	componentDidMount() {
-		this.listenForUpdates(this.state.token, (id, game) => {
-			console.log(id);
-			console.log(game);
-		});
-	}
+	// componentDidMount() {
+	// 	this.listenForUpdates(this.state.token, (id, game) => {
+	// 		console.log(id);
+	// 		console.log(game);
+	// 	});
+	// }
 
 	listenForUpdates(token, cb) {
-		const db = firebase.database().ref("gamerooms");
+
 	}
 
 	render() {

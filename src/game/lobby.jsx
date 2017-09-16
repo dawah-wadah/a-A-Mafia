@@ -1,7 +1,7 @@
 import React from "react";
 import { values } from "lodash";
 
-import {base, app} from '../base.jsx';
+import {base} from '../base.jsx';
 
 export default class Lobby extends React.Component {
 	constructor(props) {
@@ -23,9 +23,8 @@ export default class Lobby extends React.Component {
 
 	render() {
 		let allPlayers = values(this.state.players).map(player => {
-
 			return (
-			<div key={player.id}>{player.name}{
+			<div className='player-list-item'key={player.uid}>{player.name}{
 					player.uid === this.props.uid ? ' (You)' : null
 				}</div>
 		);
