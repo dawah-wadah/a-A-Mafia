@@ -1,7 +1,7 @@
 import React from "react";
 import { values } from "lodash";
 
-import {base} from '../base.jsx';
+import {base, app} from '../base.jsx';
 
 export default class Lobby extends React.Component {
 	constructor(props) {
@@ -18,6 +18,7 @@ export default class Lobby extends React.Component {
       context: this,
       state: 'players',
     });
+
   }
 
 	render() {

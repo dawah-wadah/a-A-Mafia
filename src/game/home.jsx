@@ -14,23 +14,26 @@ export default class Home extends React.Component {
 		this.state = {
 			name: "",
 			gameId: "",
-			uid: null
+			uid: this.props.uid
 		};
 
 		this._validGameId = this._validGameId.bind(this);
 	}
 
 	componentDidMount() {
-		app.auth().onAuthStateChanged(user => {
-			if (user) {
-				this.setState({
-					uid: user.uid
-				});
-			} else {
-				app.auth().signInAnonymously();
-			}
-		});
+		debugger
 	}
+
+
+
+	componentWillReceiveProps(nextProps){
+		if (this.props.uid !== nextProps.uid){
+			this.setState({
+				uid: nextProps.uid
+			});
+		}
+	}
+
 
 	_makeGame() {
 		if (this._userHasAName()) {
