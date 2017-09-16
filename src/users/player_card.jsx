@@ -1,6 +1,6 @@
 import React from "react";
 
-const { firebase } = window;
+import { app } from '../base.jsx';
 
 export default class PlayerCard extends React.Component {
 	constructor(props) {
@@ -26,7 +26,7 @@ export default class PlayerCard extends React.Component {
 	}
 
 	fetchRole(id) {
-		firebase.database()
+		app.database()
 			.ref("gamerooms" + this.state.gameId + this.state.id)
 			.once("value", snapshot => {
 				this.setState({
@@ -34,7 +34,7 @@ export default class PlayerCard extends React.Component {
 				});
 			})
 			.then(
-				firebase.database()
+				app.database()
 					.ref("roles" + this.state.roleType)
 					.once("value", snapshot =>
 						this.setState({

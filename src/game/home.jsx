@@ -6,6 +6,7 @@ import {
 } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { base, app } from "../base.jsx";
+import Promise from "es6-promise";
 
 export default class Home extends React.Component {
 	constructor(props) {
@@ -50,30 +51,37 @@ export default class Home extends React.Component {
 	}
 
 	_validGameId() {
-		return app
-			.database()
-			.ref(`gamerooms/` + `${this.state.gameId}`)
-			.once("value", snapshot => {
-				if (snapshot.val()) {
-					return true;
-				} else {
-					NotificationManager.error("Not A valid game", null, 2000);
-				}
-			});
+		let id = this.state.gameId;
+		return new Promise(function(resolve, reject) {
+			app
+				.database()
+				.ref(`gamerooms/`)
+				.once("value", snapshot => {
+					snapshot.hasChild(id) ? resolve() : reject();
+				});
+		});
 	}
 
 	_joinGame() {
-		if (this._userHasAName() && this._validGameId()) {
-			let playerID = Util.makeId(3);
-			base
-				.post(`gamerooms/${this.state.gameId}/players/${playerID}`, {
-					data: {
-						name: this.state.name,
-						id: playerID
-					}
-				})
-				.then(this.props.history.push(`/game/${this.state.gameId}`));
-		}
+		this._validGameId().then(
+			() => {
+				if (this._userHasAName()) {
+					let playerID = Util.makeId(3);
+					app.auth().signInAnonymously();
+					base
+						.post(`gamerooms/${this.state.gameId}/players/${playerID}`, {
+							data: {
+								name: this.state.name,
+								id: playerID
+							}
+						})
+						.then(this.props.history.push(`/game/${this.state.gameId}`));
+				}
+			},
+			() => {
+				NotificationManager.error("Enter a Valid Game", "Error", 2000);
+			}
+		);
 	}
 
 	_handleChange(e, field) {
