@@ -22,9 +22,14 @@ export default class Lobby extends React.Component {
   }
 
 	render() {
-		let allPlayers = values(this.state.players).map(player => (
-			<div key={player.id}>{player.name}</div>
-		));
+		let allPlayers = values(this.state.players).map(player => {
+
+			return (
+			<div key={player.id}>{player.name}{
+					player.uid === this.props.uid ? ' (You)' : null
+				}</div>
+		);
+	});
 
 		return (
 			<div>

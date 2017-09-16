@@ -5,8 +5,8 @@ const renderMergedProps = (component, ...props) => {
 	return React.createElement(component, finalProps);
 };
 
+// eslint-disable-next-line
 const PropsRoute = ({ component, ...props }) => {
-  debugger
 	return (
 		<Route
 			{...props}

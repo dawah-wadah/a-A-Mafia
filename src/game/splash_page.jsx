@@ -20,10 +20,6 @@ export default class Home extends React.Component {
 		this._validGameId = this._validGameId.bind(this);
 	}
 
-	componentDidMount() {
-		debugger
-	}
-
 
 
 	componentWillReceiveProps(nextProps){

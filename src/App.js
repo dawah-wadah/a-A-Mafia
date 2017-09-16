@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Switch, HashRouter, Route } from "react-router-dom";
-import Home from "./game/home.jsx";
-import Lobby from "./game/lobby.jsx";
+import { Switch, HashRouter } from "react-router-dom";
+import Home from "./game/splash_page.jsx";
+import './App.css';
+// import Lobby from "./game/lobby.jsx";
+import Game from './game/game.jsx';
 import PropsRoute from './proproutes.jsx';
 import { app } from "./base.jsx";
 
@@ -39,7 +41,7 @@ class App extends Component {
 				<div className="App">
 					<Switch>
 						<PropsRoute exact path ='/' component={Home} uid={this.state.uid}/>
-						<PropsRoute exact path='/game/:id' component={Lobby} uid={this.state.uid} />
+						<PropsRoute path='/game/:id' component={Game} uid={this.state.uid} />
 					</Switch>
 				</div>
 			</HashRouter>
