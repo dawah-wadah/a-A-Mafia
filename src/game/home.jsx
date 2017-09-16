@@ -13,10 +13,23 @@ export default class Home extends React.Component {
 		super(props);
 		this.state = {
 			name: "",
-			gameId: ""
+			gameId: "",
+			uid: null
 		};
 
 		this._validGameId = this._validGameId.bind(this);
+	}
+
+	componentDidMount() {
+		app.auth().onAuthStateChanged(user => {
+			if (user) {
+				this.setState({
+					uid: user.uid
+				});
+			} else {
+				app.auth().signInAnonymously();
+			}
+		});
 	}
 
 	_makeGame() {
@@ -30,7 +43,8 @@ export default class Home extends React.Component {
 						players: {
 							[playerID]: {
 								name: this.state.name,
-								id: playerID
+								id: playerID,
+								uid: this.state.uid
 							}
 						},
 						phase: "day",
@@ -62,17 +76,20 @@ export default class Home extends React.Component {
 		});
 	}
 
+	_signIn() {}
+
 	_joinGame() {
 		this._validGameId().then(
 			() => {
 				if (this._userHasAName()) {
 					let playerID = Util.makeId(3);
-					app.auth().signInAnonymously();
+
 					base
 						.post(`gamerooms/${this.state.gameId}/players/${playerID}`, {
 							data: {
 								name: this.state.name,
-								id: playerID
+								id: playerID,
+								uid: this.state.uid
 							}
 						})
 						.then(this.props.history.push(`/game/${this.state.gameId}`));
