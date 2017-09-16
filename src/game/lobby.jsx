@@ -1,7 +1,7 @@
 import React from "react";
 import { values } from "lodash";
 
-import BaseGod from '../BaseGod.jsx';
+import {base} from '../base.jsx';
 
 export default class Lobby extends React.Component {
 	constructor(props) {
@@ -14,7 +14,7 @@ export default class Lobby extends React.Component {
 
 
   componentDidMount() {
-    BaseGod.syncState(`gamerooms/${this.state.id}/players`,{
+    base.syncState(`gamerooms/${this.state.id}/players`,{
       context: this,
       state: 'players',
     });
