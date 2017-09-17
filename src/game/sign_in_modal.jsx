@@ -20,7 +20,8 @@ class SignInModal extends React.Component {
 					data: {
 						active: true,
 						name: name,
-						uid: user.uid
+						uid: user.uid,
+						leftGame: false
 					}
 				});
 			}

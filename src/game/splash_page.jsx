@@ -39,7 +39,8 @@ export default class Home extends React.Component {
 							[this.state.uid]: {
 								name: this.state.name,
 								uid: this.state.uid,
-								active: true
+								active: true,
+								leftGame: false
 							}
 						},
 						phase: "day",
@@ -92,7 +93,8 @@ export default class Home extends React.Component {
 										data: {
 											name: this.state.name,
 											uid: this.state.uid,
-											active: true
+											active: true,
+											leftGame: false
 										}
 									}
 								)
@@ -105,7 +107,8 @@ export default class Home extends React.Component {
 										data: {
 											name: this.state.name,
 											uid: this.state.uid,
-											active: true
+											active: true,
+											leftGame: false
 										}
 									}
 								)

@@ -20,6 +20,7 @@ export default class Game extends React.Component {
 			open: false
 		};
 		this.enableDisconnect = this.enableDisconnect.bind(this);
+		this.leaveGame = this.leaveGame.bind(this);
 	}
 
 	startGame() {
@@ -29,41 +30,49 @@ export default class Game extends React.Component {
 		this.props.history.push(`/game/${this.props.match.params.id}/game`);
 	}
 
-	leaveGame() {
-		console.log("clicked");
+	leaveGame(playerId) {
 		let id = this.props.match.params.id;
-		let uid = this.props.uid;
-		new Promise(function(resolve, reject) {
-			app
-				.database()
-				.ref(`/gamerooms/${id}/players/${uid}`)
-				.remove();
-		}).then(
-			this.props.history.push('/')
-		);
+		return new Promise((resolve, reject) => {
+				userRef(id, playerId).update({
+					leftGame: true,
+					active: false,
+				})
+				.then(
+					userRef(id, playerId)
+						.onDisconnect()
+						.cancel()
+				);
+		}).then(this.props.history.push("/"));
 	}
 
 	componentDidMount() {
-		this.reconnect();
-		this.enableDisconnect();
+		console.log('Game Room Mounting');
+		this.reconnect(this.props.uid);
+		this.enableDisconnect(this.props.uid);
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.uid !== nextProps.uid) {
-			this.reconnect();
-			this.enableDisconnect();
+			this.reconnect(nextProps.uid);
+			this.enableDisconnect(nextProps.uid);
 		}
 	}
 
-	reconnect() {
-		if (this.props.uid) {
-			userRef(
-				this.props.match.params.id,
-				this.props.uid
-			).on("value", snapshot => {
-				if (snapshot.exists()) {
-					userRef(this.props.match.params.id, this.props.uid).update({
-						active: true
+	componentWillUnmount() {
+		console.log("component shut down");
+		// new Promise(function(resolve, reject) {
+		// 	reject(this.reconnect(this.props.uid));
+		// });
+	}
+
+	reconnect(playerId) {
+		console.log("reconnecting...");
+		if (playerId) {
+			userRef(this.props.match.params.id, playerId).on("value", snapshot => {
+				if (snapshot.exists() && !snapshot.val().leftGame) {
+					userRef(this.props.match.params.id, playerId).update({
+						active: true,
+						leftGame: false
 					});
 				} else {
 					this.setState({
@@ -74,19 +83,19 @@ export default class Game extends React.Component {
 		}
 	}
 
-	enableDisconnect() {
-		if (this.props.uid) {
+	enableDisconnect(playerId) {
+		console.log("setting up disconnect");
+		if (playerId) {
 			let location = this.props.match.params.id;
-			let uid = this.props.uid;
 			app
 				.database()
 				.ref(`gamerooms/${this.props.match.params.id}/`)
 				.on("value", function(snapshot) {
 					if (snapshot.exists()) {
-						userRef(location, uid)
+						userRef(location, playerId)
 							.onDisconnect()
 							.update({
-								active: false
+								active: false,
 							});
 					}
 				});
@@ -132,7 +141,10 @@ export default class Game extends React.Component {
 						<div className="btn start" onClick={this.startGame.bind(this)}>
 							Start Game
 						</div>
-						<div className="btn leave" onClick={this.leaveGame.bind(this)}>
+						<div
+							className="btn leave"
+							onClick={() => this.leaveGame(this.props.uid)}
+						>
 							Leave Game
 						</div>
 					</div>
