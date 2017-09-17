@@ -43,7 +43,8 @@ export default class Home extends React.Component {
 							}
 						},
 						phase: "day",
-						game_over: false
+						game_over: false,
+						leader: this.props.uid
 					}
 				})
 				.then(this.props.history.push(`/game/${id}`));
@@ -129,7 +130,7 @@ export default class Home extends React.Component {
 
 	render() {
 		return (
-			<div className="sub-window">
+			<div className="container">
 				<h1>Welcome to aA Mafia</h1>
 				<div className="input-container">
 					<div className="name-container">
@@ -167,30 +168,5 @@ export default class Home extends React.Component {
 				<NotificationContainer />
 			</div>
 		);
-
-		// 	return (
-		// 		<div className="sub-window">
-		// 			<h1>Welcome to aA Mafia</h1>
-		// 			<div>
-		// 				<div>
-		// 					<label>
-		// 						<input className='mui-textfield'
-		// 							type="text"
-		// 							onChange={e => this._handleChange(e, "name")}
-		// 						/>
-		// 					<div className="mui-btn mui-btn--primary new-game" onClick={this._makeGame.bind(this)}>
-		// 						New Game
-		// 					</div>
-		// 					</label>
-		// 					<label>
-		// 						<input  className='mui-textfield'onChange={e => this._handleChange(e, "gameId")} />
-		// 						<div className="mui-btn mui-btn--primary join-game" onClick={this._joinGame.bind(this)}>
-		// 							Join a Game
-		// 						</div>
-		// 					</label>
-		// 				</div>
-		// 			</div>
-		// 		</div>
-		// 	);
 	}
 }

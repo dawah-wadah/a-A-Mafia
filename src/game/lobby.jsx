@@ -8,7 +8,8 @@ export default class Lobby extends React.Component {
 		super(props);
 		this.state = {
 			id: this.props.match.params.id,
-			players: {}
+			players: {},
+			leader: null,
 		};
 	}
 
@@ -21,24 +22,28 @@ export default class Lobby extends React.Component {
 
 	render() {
 		let allPlayers = values(this.state.players).map(player => {
-			if (player.active) {
-				return (
-					<div className="player-list-item" key={player.uid}>
-						{player.name}
-						{player.uid === this.props.uid ? " (You)" : null}
-					</div>
-				);
+			if (player) {
+				if (player.active) {
+					return (
+						<div className="player-list-item" key={player.uid}>
+							{player.name}
+							{player.uid === this.props.uid ? " (You)" : null}
+						</div>
+					);
+				} else {
+					return (
+						<div className="player-list-item" key={player.uid}>
+							{player.name} (Inactive )
+						</div>
+					);
+				}
 			} else {
-				return (
-					<div className="player-list-item" key={player.uid}>
-						{player.name} (Inactive )
-					</div>
-				);
+				return;
 			}
 		});
 
 		return (
-			<div className="mui-container">
+			<div className="container">
 				<h1>Here are all the players</h1>
 				{allPlayers}
 			</div>

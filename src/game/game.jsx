@@ -6,19 +6,20 @@ import LiveGame from "./live_game.jsx";
 import { app } from "../base.jsx";
 import Promise from "es6-promise";
 import "../css/lobby.css";
+import Modal from "../modal.jsx";
+import SignInModal from "./sign_in_modal.jsx";
 
-const userRef = (location, uid) => (
-	app.database().ref("/gamerooms/" + location + "/players/" + uid)
-);
+const userRef = (location, uid) =>
+	app.database().ref("/gamerooms/" + location + "/players/" + uid);
 
 export default class Game extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			started: false
+			started: false,
+			open: false
 		};
-		this.leaveGame = this.leaveGame.bind(this);
-		this.disconnect = this.disconnect.bind(this);
+		this.enableDisconnect = this.enableDisconnect.bind(this);
 	}
 
 	startGame() {
@@ -42,40 +43,74 @@ export default class Game extends React.Component {
 
 	componentDidMount() {
 		this.reconnect();
-		this.disconnect();
+		this.enableDisconnect();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.uid !== nextProps.uid) {
+			this.reconnect();
+			this.enableDisconnect();
+		}
 	}
 
 	reconnect() {
-		userRef(
-			this.props.match.params.id,
-			this.props.uid
-		).on("value", snapshot => {
-			if (snapshot.exists()) {
-				userRef(this.props.match.params.id, this.props.uid).update({
-					active: true
-				});
-			}
-		});
-	}
-
-	disconnect() {
-		let location = this.props.match.params.id;
-		let uid = this.props.uid;
-		app
-			.database()
-			.ref(`gamerooms/${this.props.match.params.id}/`)
-			.on("value", function(snapshot) {
-				if (snapshot.val()) {
-					userRef(location, uid).onDisconnect().update({
-						active: false
+		if (this.props.uid) {
+			userRef(
+				this.props.match.params.id,
+				this.props.uid
+			).on("value", snapshot => {
+				if (snapshot.exists()) {
+					userRef(this.props.match.params.id, this.props.uid).update({
+						active: true
+					});
+				} else {
+					this.setState({
+						open: true
 					});
 				}
 			});
+		}
+	}
+
+	enableDisconnect() {
+		if (this.props.uid) {
+			let location = this.props.match.params.id;
+			let uid = this.props.uid;
+			app
+				.database()
+				.ref(`gamerooms/${this.props.match.params.id}/`)
+				.on("value", function(snapshot) {
+					if (snapshot.exists()) {
+						userRef(location, uid)
+							.onDisconnect()
+							.update({
+								active: false
+							});
+					}
+				});
+		}
+	}
+
+	closeModal() {
+		this.setState({
+			open: false
+		});
 	}
 
 	render() {
 		return (
 			<div className="game-view">
+				{this.state.open ? (
+					<Modal
+						open={true}
+						component={
+							<SignInModal
+								close={this.closeModal.bind(this)}
+								location={this.props.match.params.id}
+							/>
+						}
+					/>
+				) : null}
 				<Switch>
 					<PropRoute
 						exact
@@ -92,16 +127,10 @@ export default class Game extends React.Component {
 				</Switch>
 				{this.state.started ? null : (
 					<div className="buttons">
-						<div
-							className="mui-btn mui-btn-primary start"
-							onClick={this.startGame.bind(this)}
-						>
+						<div className="btn start" onClick={this.startGame.bind(this)}>
 							Start Game
 						</div>
-						<div
-							className="mui-btn mui-btn-primary leave"
-							onClick={this.leaveGame.bind(this)}
-						>
+						<div className="btn leave" onClick={this.leaveGame.bind(this)}>
 							Leave Game
 						</div>
 					</div>
