@@ -38,7 +38,9 @@ export default class Game extends React.Component {
 				.database()
 				.ref(`/gamerooms/${id}/players/${uid}`)
 				.remove();
-		});
+		}).then(
+			this.props.history.push('/')
+		);
 	}
 
 	componentDidMount() {
