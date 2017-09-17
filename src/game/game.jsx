@@ -5,17 +5,12 @@ import Lobby from "./lobby.jsx";
 import LiveGame from "./live_game.jsx";
 import { app } from "../base.jsx";
 import Promise from "es6-promise";
+import "../css/lobby.css";
 
-window.onbeforeunload = function() {
-	return "You are about to leave";
-};
-window.addEventListener("beforeunload", function(e) {
-	Game.leaveGame();
-	var confirmationMessage = "o/";
-	//
-	e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-	return confirmationMessage; // Gecko, WebKit, Chrome <34
-});
+const userRef = (location, uid) => (
+	app.database().ref("/gamerooms/" + location + "/players/" + uid)
+);
+
 export default class Game extends React.Component {
 	constructor(props) {
 		super(props);
@@ -23,6 +18,7 @@ export default class Game extends React.Component {
 			started: false
 		};
 		this.leaveGame = this.leaveGame.bind(this);
+		this.disconnect = this.disconnect.bind(this);
 	}
 
 	startGame() {
@@ -45,23 +41,36 @@ export default class Game extends React.Component {
 	}
 
 	componentDidMount() {
-		var userRef = app
-			.database()
-			.ref("/gamerooms/" + this.props.match.params.id + "/players/" + this.props.uid);
+		this.reconnect();
+		this.disconnect();
+	}
+
+	reconnect() {
+		userRef(
+			this.props.match.params.id,
+			this.props.uid
+		).on("value", snapshot => {
+			if (snapshot.exists()) {
+				userRef(this.props.match.params.id, this.props.uid).update({
+					active: true
+				});
+			}
+		});
+	}
+
+	disconnect() {
+		let location = this.props.match.params.id;
+		let uid = this.props.uid;
 		app
 			.database()
 			.ref(`gamerooms/${this.props.match.params.id}/`)
 			.on("value", function(snapshot) {
 				if (snapshot.val()) {
-					userRef.onDisconnect().update({
+					userRef(location, uid).onDisconnect().update({
 						active: false
 					});
 				}
 			});
-	}
-
-	componentWillUnmount() {
-		// window.removeEventListener('onbeforeunload', this.leaveGame.bind(this));
 	}
 
 	render() {
