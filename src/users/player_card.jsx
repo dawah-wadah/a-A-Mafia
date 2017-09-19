@@ -1,7 +1,12 @@
 import React from "react";
 import Promise from "es6-promise";
 
-import { app } from "../base.jsx";
+import { app, base } from "../base.jsx";
+
+const userRef = (location, uid) =>
+	app.database().ref("/gamerooms/" + location + "/players/" + uid + "/role");
+const userRefString = (location, uid) =>
+	"/gamerooms/" + location + "/players/" + uid + "/role";
 
 export default class PlayerCard extends React.Component {
 	constructor(props) {
@@ -9,14 +14,13 @@ export default class PlayerCard extends React.Component {
 		this.state = {
 			id: this.props.uid,
 			gameId: this.props.gameId,
-			roleType: "doctor",
+			roleType: null,
 			role: {
-				ability: "healing",
-				image:
-					"https://i.pinimg.com/originals/26/4e/30/264e30439c42387c1e3c48d2d038429d.png",
-				allegiance: "town",
-				win_condition: "town wins",
-				description: null
+				ability: "",
+				allegiance: "",
+				image: "",
+				win_condition: "",
+				description: ""
 			}
 		};
 		this.fetchRole = this.fetchRole.bind(this);
@@ -24,39 +28,39 @@ export default class PlayerCard extends React.Component {
 	}
 
 	componentDidMount() {
-		this.fetchRole(this.props.uid);
+		if (this.props.uid) {
+			this.fetchRole(this.props.uid, this.state.gameId);
+		}
 	}
 	componentWillReceiveProps(nextProps) {
 		if (
 			this.props.uid !== nextProps.uid &&
-			this.state.role.description === null
+			this.state.role.description === ""
 		) {
-			this.fetchRole(nextProps.uid);
+			this.fetchRole(nextProps.uid, this.state.gameId);
 		}
 	}
 
 	getUserId() {}
 
-	fetchRole(id) {
-		if (id) {
-			app
-				.database()
-				.ref("gamerooms/" + this.state.gameId + "/players/" + id + "/role")
+	fetchRole(id, location) {
+		if (id && location && this.state.roleType === null) {
+			userRef(location, id)
 				.once("value", snapshot => {
 					this.setState({
 						roleType: snapshot.val()
 					});
 				})
-				.then(
+				.then(data => {
 					app
 						.database()
-						.ref("roles/" + this.state.roleType)
-						.once("value", snapshot => {
+						.ref(`roles/${data.val()}`)
+						.on("value", info => {
 							this.setState({
-								role: snapshot.val()
+								role: info.val()
 							});
-						})
-				);
+						});
+				});
 		}
 	}
 
@@ -64,8 +68,12 @@ export default class PlayerCard extends React.Component {
 		return (
 			<div className="container top-buffer">
 				<div className="player-list-item header">{this.state.roleType}</div>
+
 				<div className="player-list-item allegiance">
 					Allegiance: {this.state.role.allegiance}
+				</div>
+				<div className="player-list-item win">
+					How To Win: {this.state.role.win_condition}
 				</div>
 				<div className="player-list-item image">
 					<img src={this.state.role.image} />

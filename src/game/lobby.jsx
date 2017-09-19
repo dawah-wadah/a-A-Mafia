@@ -44,7 +44,7 @@ export default class Lobby extends React.Component {
 	}
 
 	assignRoles(players) {
-		const possibleRoles = ["doctor"];
+		const possibleRoles = ['Doctor', 'Killer', 'Investigator', 'Mafioso'];
 		let location = this.props.match.params.id;
 		values(players).forEach(player => {
 			// app.database().ref(`gamerooms/${location}/players/${player.uid}`).set()
