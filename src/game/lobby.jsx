@@ -1,7 +1,11 @@
 import React from "react";
 import { sample, values } from "lodash";
+import Promise from "es6-promise";
 
 import { app, base } from "../base.jsx";
+
+const userRef = (location, uid) =>
+	app.database().ref("/gamerooms/" + location + "/players/" + uid + "/role");
 
 export default class Lobby extends React.Component {
 	constructor(props) {
@@ -24,9 +28,6 @@ export default class Lobby extends React.Component {
 	}
 
 	startGame() {
-		// this.setState({
-		// 	started: true
-		// });
 		this.assignRoles(this.state.players).then(
 			this.props.history.push(`/game/${this.props.match.params.id}/game`)
 		);
@@ -44,14 +45,29 @@ export default class Lobby extends React.Component {
 	}
 
 	assignRoles(players) {
-		const possibleRoles = ['Doctor', 'Killer', 'Investigator', 'Mafioso'];
+		const possibleRoles = ["Doctor", "Killer", "Investigator", "Mafioso"];
 		let location = this.props.match.params.id;
 		values(players).forEach(player => {
-			// app.database().ref(`gamerooms/${location}/players/${player.uid}`).set()
 			base.post(`gamerooms/${location}/players/${player.uid}/role`, {
 				data: sample(possibleRoles)
 			});
 		});
+	}
+
+	leaveGame(playerId) {
+		let id = this.props.match.params.id;
+		return new Promise((resolve, reject) => {
+			userRef(id, playerId)
+				.update({
+					leftGame: true,
+					active: false
+				})
+				.then(
+					userRef(id, playerId)
+						.onDisconnect()
+						.cancel()
+				);
+		}).then(this.props.history.push("/"));
 	}
 
 	startGame() {
@@ -63,7 +79,6 @@ export default class Lobby extends React.Component {
 	}
 
 	render() {
-
 		let activePlayers = [];
 		let inactivePlayers = [];
 		let playersWhoLeft = [];
