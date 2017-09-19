@@ -1,9 +1,6 @@
 import React from "react";
 import Util from "../utility.js";
-import {
-	NotificationContainer,
-	NotificationManager
-} from "react-notifications";
+import { NotificationManager } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { base, app } from "../base.jsx";
 import Promise from "es6-promise";
@@ -41,7 +38,7 @@ export default class Home extends React.Component {
 								uid: this.state.uid,
 								active: true,
 								leftGame: false,
-								role: null,
+								role: null
 							}
 						},
 						phase: "day",
@@ -96,8 +93,7 @@ export default class Home extends React.Component {
 											uid: this.state.uid,
 											active: true,
 											leftGame: false,
-											role: null,
-
+											role: null
 										}
 									}
 								)
@@ -112,8 +108,7 @@ export default class Home extends React.Component {
 											uid: this.state.uid,
 											active: true,
 											leftGame: false,
-											role: null,
-
+											role: null
 										}
 									}
 								)
@@ -144,14 +139,21 @@ export default class Home extends React.Component {
 					<div className="name-container">
 						<label>
 							<input
-								className="mui-textfield"
+								className="text-input"
 								type="text"
 								onChange={e => this._handleChange(e, "name")}
 								placeholder="Whats Your Name"
 							/>
 						</label>
+						<label>
+							<input
+								className="text-input"
+								onChange={e => this._handleChange(e, "gameId")}
+								placeholder="Enter Gameroom ID"
+							/>
+						</label>
 					</div>
-					<div className="buttons-area">
+					<div className="buttons">
 						<div
 							className="mui-btn mui-btn--primary new-game"
 							onClick={this._makeGame.bind(this)}
@@ -164,16 +166,8 @@ export default class Home extends React.Component {
 						>
 							Join a Game
 						</div>
-						<label>
-							<input
-								className="mui-textfield"
-								onChange={e => this._handleChange(e, "gameId")}
-								placeholder="Enter Gameroom ID"
-							/>
-						</label>
 					</div>
 				</div>
-				<NotificationContainer />
 			</div>
 		);
 	}

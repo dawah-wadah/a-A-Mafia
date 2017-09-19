@@ -5,6 +5,10 @@ import './App.css';
 import Game from './game/game.jsx';
 import PropsRoute from './proproutes.jsx';
 import { app } from "./base.jsx";
+import {
+	NotificationContainer
+} from "react-notifications";
+import "react-notifications/lib/notifications.css";
 
 class App extends Component {
 	constructor(props) {
@@ -42,6 +46,8 @@ class App extends Component {
 						<PropsRoute exact path ='/' component={Home} uid={this.state.uid}/>
 						<PropsRoute path='/game/:id' component={Game} uid={this.state.uid} />
 					</Switch>
+					<NotificationContainer />
+
 				</div>
 			</HashRouter>
 		);

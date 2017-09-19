@@ -7,7 +7,8 @@
 	border: 1px;
 	border-radius: 2px;
 	background-color: #fff;
-	-webkit-box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 0 0 14px rgba(0, 0, 0, 0.12),
+		0 3px 11px rgba(0, 0, 0, 0.2);
 	box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
 	text-transform: uppercase;
 	font-size: 24px;
@@ -17,6 +18,26 @@
 	transition: all 0.2s ease-in-out;
 	-ms-touch-action: manipulation;
 	touch-action: manipulation;
+}
+
+.text-input {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	display: block;
+	background-color: transparent;
+	color: rgba(0, 0, 0, 0.87);
+	border: none;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.26);
+	outline: 0;
+	width: 100%;
+	padding: 10px;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border-radius: 0;
+	font-size: 16px;
+	font-family: inherit;
+	line-height: inherit;
+	background-image: none;
 }
 
 .image {
@@ -31,7 +52,7 @@
 	box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
 	min-width: 94px;
 	min-height: 36px;
-	margin: 6px 4px;;
+	margin: 24px 4px;
 	padding: 0 26px;
 	color: rgba(0, 0, 0, 0.87);
 	overflow: hidden;
@@ -62,12 +83,16 @@
 	cursor: pointer;
 }
 
+.yellow {
+	background-color: #FFA
+}
+
 .blue {
 	background-color: #62bdf5;
 	color: white;
 }
 .red {
-	background-color: #E24825;
+	background-color: #e24825;
 	color: white;
 }
 
