@@ -3,12 +3,10 @@ import { Switch } from "react-router-dom";
 import PropRoute from "../proproutes.jsx";
 import Lobby from "./lobby.jsx";
 import LiveGame from "./live_game.jsx";
-import { app, base } from "../base.jsx";
-import Promise from "es6-promise";
+import { app } from "../base.jsx";
 import "../css/lobby.css";
 import Modal from "../modal.jsx";
 import SignInModal from "./sign_in_modal.jsx";
-import { sample } from 'lodash';
 
 const userRef = (location, uid) =>
 	app.database().ref("/gamerooms/" + location + "/players/" + uid);
@@ -18,37 +16,13 @@ export default class Game extends React.Component {
 		super(props);
 		this.state = {
 			uid: this.props.uid,
-			started: false,
 			open: false
 		};
 		this.enableDisconnect = this.enableDisconnect.bind(this);
-		this.leaveGame = this.leaveGame.bind(this);
-	}
-
-	startGame() {
-		this.setState({
-			started: true
-		});
-		this.props.history.push(`/game/${this.props.match.params.id}/game`);
-	}
-
-	leaveGame(playerId) {
-		let id = this.props.match.params.id;
-		return new Promise((resolve, reject) => {
-				userRef(id, playerId).update({
-					leftGame: true,
-					active: false,
-				})
-				.then(
-					userRef(id, playerId)
-						.onDisconnect()
-						.cancel()
-				);
-		}).then(this.props.history.push("/"));
 	}
 
 	componentDidMount() {
-		console.log('Game Room Mounting');
+		console.log("Game Room Mounting");
 		this.reconnect(this.props.uid);
 		this.enableDisconnect(this.props.uid);
 	}
@@ -62,23 +36,6 @@ export default class Game extends React.Component {
 
 	componentWillUnmount() {
 		console.log("component shut down");
-		// new Promise(function(resolve, reject) {
-		// 	reject(this.reconnect(this.props.uid));
-		// });
-	}
-
-	assignRoles(players) {
-		const possibleRoles = ["doctor"];
-		let location = this.props.match.params.id;
-		players.forEach(player => {
-
-			// app.database().ref(`gamerooms/${location}/players/${player.uid}`).set()
-			base.post(`gamerooms/${location}/players/${player.uid}`, {
-				data: {
-					role: sample(possibleRoles)
-				}
-			});
-		});
 	}
 
 	reconnect(playerId) {
@@ -111,7 +68,7 @@ export default class Game extends React.Component {
 						userRef(location, playerId)
 							.onDisconnect()
 							.update({
-								active: false,
+								active: false
 							});
 					}
 				});
@@ -156,17 +113,3 @@ export default class Game extends React.Component {
 		);
 	}
 }
-
-// {this.state.started ? null : (
-// 	<div className="buttons">
-// 		<div className="btn start" onClick={this.startGame.bind(this)}>
-// 			Start Game
-// 		</div>
-// 		<div
-// 			className="btn leave"
-// 			onClick={() => this.leaveGame(this.props.uid)}
-// 			>
-// 			Leave Game
-// 		</div>
-// 	</div>
-// )}

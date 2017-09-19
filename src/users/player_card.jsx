@@ -1,12 +1,11 @@
 import React from "react";
-import Promise from "es6-promise";
 
-import { app, base } from "../base.jsx";
+import { app } from "../base.jsx";
 
 const userRef = (location, uid) =>
 	app.database().ref("/gamerooms/" + location + "/players/" + uid + "/role");
-const userRefString = (location, uid) =>
-	"/gamerooms/" + location + "/players/" + uid + "/role";
+// const userRefString = (location, uid) =>
+// 	"/gamerooms/" + location + "/players/" + uid + "/role";
 
 export default class PlayerCard extends React.Component {
 	constructor(props) {

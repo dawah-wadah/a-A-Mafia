@@ -1,6 +1,5 @@
 import React from "react";
 import { app, base } from "../base.jsx";
-import {values} from 'lodash';
 import PlayerCard from '../users/player_card.jsx';
 
 export default class LiveGame extends React.Component {
@@ -57,12 +56,6 @@ export default class LiveGame extends React.Component {
 
 
 	render() {
-		const allStats = values(this.state.stats).map((stat) => (
-			<div className="player-list-item">{stat}</div>
-		));
-		// <div className="container">
-		// 	{allStats}
-		// </div>
 		return (
 			<PlayerCard uid={this.state.uid} gameId={this.props.match.params.id}/>
 		);

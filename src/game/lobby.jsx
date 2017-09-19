@@ -13,10 +13,12 @@ export default class Lobby extends React.Component {
 		this.state = {
 			id: this.props.match.params.id,
 			players: {},
-			leader: null
+			leader: null,
+			start: false
 		};
 		this.getGameLeader = this.getGameLeader.bind(this);
 		this.startGame = this.startGame.bind(this);
+		this.checkforGameStarted = this.checkforGameStarted.bind(this);
 	}
 
 	componentDidMount() {
@@ -25,12 +27,26 @@ export default class Lobby extends React.Component {
 			state: "players"
 		});
 		this.getGameLeader(this.state.id);
+		this.checkforGameStarted();
 	}
 
-	startGame() {
-		this.assignRoles(this.state.players).then(
-			this.props.history.push(`/game/${this.props.match.params.id}/game`)
-		);
+	checkforGameStarted() {
+		base.syncState(`/gamerooms/${this.props.match.params.id}/start`, {
+			context: this,
+			state: "start"
+		});
+	}
+
+	signalStart() {
+		base.post(`gamerooms/${this.props.match.params.id}/start`, {
+			data: true
+		});
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+		if (nextState.start === true && this.state.start === false) {
+			this.props.history.push(`/game/${this.props.match.params.id}/game`);
+		}
 	}
 
 	getGameLeader(gameId) {
@@ -71,9 +87,7 @@ export default class Lobby extends React.Component {
 	}
 
 	startGame() {
-		this.setState({
-			started: true
-		});
+		this.signalStart();
 		this.assignRoles(this.state.players);
 		this.props.history.push(`/game/${this.props.match.params.id}/game`);
 	}
@@ -123,16 +137,25 @@ export default class Lobby extends React.Component {
 				{this.state.leader === this.props.uid ? (
 					<div className="buttons">
 						<div className="btn start" onClick={this.startGame.bind(this)}>
-							Start Game
+							Start Game Lobby
 						</div>
 						<div
 							className="btn leave"
 							onClick={() => this.leaveGame(this.props.uid)}
 						>
-							Leave Game
+							Leave Game lobby
 						</div>
 					</div>
-				) : null}
+				) : (
+					<div className="buttons">
+						<div
+							className="btn leave"
+							onClick={() => this.leaveGame(this.props.uid)}
+						>
+							Leave Game lobby
+						</div>
+					</div>
+				)}
 			</div>
 		);
 	}
