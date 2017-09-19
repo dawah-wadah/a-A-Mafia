@@ -61,7 +61,7 @@ export default class Lobby extends React.Component {
 	}
 
 	assignRoles(players) {
-		const possibleRoles = ["Doctor", "Killer", "Investigator", "Mafioso"];
+		const possibleRoles = ["Doctor", "Killer", "Investigator", "Mafioso", "Jester", "Vigilante"];
 		let location = this.props.match.params.id;
 		values(players).forEach(player => {
 			base.post(`gamerooms/${location}/players/${player.uid}/role`, {
@@ -143,7 +143,7 @@ export default class Lobby extends React.Component {
 							className="btn leave"
 							onClick={() => this.leaveGame(this.props.uid)}
 						>
-							Leave Game lobby
+							Leave Game
 						</div>
 					</div>
 				) : (
@@ -152,7 +152,7 @@ export default class Lobby extends React.Component {
 							className="btn leave"
 							onClick={() => this.leaveGame(this.props.uid)}
 						>
-							Leave Game lobby
+							Leave Game
 						</div>
 					</div>
 				)}

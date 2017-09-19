@@ -1,6 +1,6 @@
 import React from "react";
 import { app, base } from "../base.jsx";
-import PlayerCard from '../users/player_card.jsx';
+import PlayerCard from "../users/player_card.jsx";
 
 export default class LiveGame extends React.Component {
 	constructor(props) {
@@ -11,8 +11,8 @@ export default class LiveGame extends React.Component {
 			stats: {}
 		};
 		this.signIn = this.signIn.bind(this);
+		this.syncWithServer = this.syncWithServer.bind(this);
 	}
-
 
 	signIn() {
 		app.auth().onAuthStateChanged(user => {
@@ -32,32 +32,26 @@ export default class LiveGame extends React.Component {
 	componentDidMount() {
 		this.signIn();
 		if (this.props.uid) {
-			base.syncState(
-				`gamerooms/${this.props.match.params.id}/players/${this.props.uid}`,
-				{
-					context: this,
-					state: "stats"
-				}
-			);
+			this.syncWithServer(this.props);
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.uid !== nextProps.uid) {
-			base.syncState(
-				`gamerooms/${nextProps.match.params.id}/players/${nextProps.uid}`,
-				{
-					context: this,
-					state: "stats"
-				}
-			);
+			this.syncWithServer(nextProps);
 		}
 	}
 
+	syncWithServer(props) {
+		base.syncState(`gamerooms/${props.match.params.id}/players/${props.uid}`, {
+			context: this,
+			state: "stats"
+		});
+	}
 
 	render() {
 		return (
-			<PlayerCard uid={this.state.uid} gameId={this.props.match.params.id}/>
+			<PlayerCard uid={this.state.uid} gameId={this.props.match.params.id} />
 		);
 	}
 }
