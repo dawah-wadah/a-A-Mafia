@@ -137,7 +137,7 @@ export default class Lobby extends React.Component {
 				{this.state.leader === this.props.uid ? (
 					<div className="buttons">
 						<div className="btn start" onClick={this.startGame.bind(this)}>
-							Start Game Lobby
+							Start Game
 						</div>
 						<div
 							className="btn leave"

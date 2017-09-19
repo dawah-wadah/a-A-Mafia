@@ -28,8 +28,10 @@
 }
 
 .btn {
-	height: 36px;
-	margin: 6px 0;
+	box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
+	min-width: 94px;
+	min-height: 36px;
+	margin: 6px 4px;;
 	padding: 0 26px;
 	color: rgba(0, 0, 0, 0.87);
 	overflow: hidden;
@@ -47,7 +49,6 @@
 	line-height: 18px;
 	line-height: 36px;
 	letter-spacing: 0.03em;
-	white-space: nowrap;
 	animation-duration: 0.0001s;
 	animation-name: mui-btn-inserted;
 	-webkit-transition: all 0.2s ease-in-out;
@@ -62,11 +63,11 @@
 }
 
 .blue {
-	background-color: blue;
+	background-color: #62bdf5;
 	color: white;
 }
 .red {
-	background-color: red;
+	background-color: #E24825;
 	color: white;
 }
 
@@ -76,9 +77,8 @@
 
 .buttons {
 	display: flex;
-	width: 60%;
 	margin: auto;
-	justify-content: center;
+	justify-content: space-between;
 }
 
 @media (min-width: 1200px) .container {
