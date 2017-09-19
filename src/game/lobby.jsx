@@ -1,7 +1,7 @@
 import React from "react";
-import { values } from "lodash";
+import { sample, values } from "lodash";
 
-import { base } from "../base.jsx";
+import { app, base } from "../base.jsx";
 
 export default class Lobby extends React.Component {
 	constructor(props) {
@@ -11,6 +11,8 @@ export default class Lobby extends React.Component {
 			players: {},
 			leader: null
 		};
+		this.getGameLeader = this.getGameLeader.bind(this);
+		this.startGame = this.startGame.bind(this);
 	}
 
 	componentDidMount() {
@@ -18,9 +20,50 @@ export default class Lobby extends React.Component {
 			context: this,
 			state: "players"
 		});
+		this.getGameLeader(this.state.id);
+	}
+
+	startGame() {
+		// this.setState({
+		// 	started: true
+		// });
+		this.assignRoles(this.state.players).then(
+			this.props.history.push(`/game/${this.props.match.params.id}/game`)
+		);
+	}
+
+	getGameLeader(gameId) {
+		app
+			.database()
+			.ref(`gamerooms/${gameId}/leader`)
+			.on("value", snapshot => {
+				this.setState({
+					leader: snapshot.val()
+				});
+			});
+	}
+
+	assignRoles(players) {
+		const possibleRoles = ["doctor"];
+		let location = this.props.match.params.id;
+		values(players).forEach(player => {
+			// app.database().ref(`gamerooms/${location}/players/${player.uid}`).set()
+			base.post(`gamerooms/${location}/players/${player.uid}/role`, {
+				data: sample(possibleRoles)
+			});
+		});
+	}
+
+	startGame() {
+		this.setState({
+			started: true
+		});
+		this.assignRoles(this.state.players);
+		this.props.history.push(`/game/${this.props.match.params.id}/game`);
 	}
 
 	render() {
+
 		let activePlayers = [];
 		let inactivePlayers = [];
 		let playersWhoLeft = [];
@@ -54,7 +97,7 @@ export default class Lobby extends React.Component {
 		return (
 			<div className="container">
 				<h1>Here are all the players</h1>
-				<div className='container'>
+				<div className="container">
 					<h2>Active Players</h2>
 					{activePlayers}
 					<h2>Inactive Player</h2>
@@ -62,6 +105,19 @@ export default class Lobby extends React.Component {
 					<h2>Players No Longer With Us (RIP)</h2>
 					{playersWhoLeft}
 				</div>
+				{this.state.leader === this.props.uid ? (
+					<div className="buttons">
+						<div className="btn start" onClick={this.startGame.bind(this)}>
+							Start Game
+						</div>
+						<div
+							className="btn leave"
+							onClick={() => this.leaveGame(this.props.uid)}
+						>
+							Leave Game
+						</div>
+					</div>
+				) : null}
 			</div>
 		);
 	}

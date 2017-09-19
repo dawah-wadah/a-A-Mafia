@@ -3,11 +3,12 @@ import { Switch } from "react-router-dom";
 import PropRoute from "../proproutes.jsx";
 import Lobby from "./lobby.jsx";
 import LiveGame from "./live_game.jsx";
-import { app } from "../base.jsx";
+import { app, base } from "../base.jsx";
 import Promise from "es6-promise";
 import "../css/lobby.css";
 import Modal from "../modal.jsx";
 import SignInModal from "./sign_in_modal.jsx";
+import { sample } from 'lodash';
 
 const userRef = (location, uid) =>
 	app.database().ref("/gamerooms/" + location + "/players/" + uid);
@@ -16,6 +17,7 @@ export default class Game extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			uid: this.props.uid,
 			started: false,
 			open: false
 		};
@@ -63,6 +65,20 @@ export default class Game extends React.Component {
 		// new Promise(function(resolve, reject) {
 		// 	reject(this.reconnect(this.props.uid));
 		// });
+	}
+
+	assignRoles(players) {
+		const possibleRoles = ["doctor"];
+		let location = this.props.match.params.id;
+		players.forEach(player => {
+
+			// app.database().ref(`gamerooms/${location}/players/${player.uid}`).set()
+			base.post(`gamerooms/${location}/players/${player.uid}`, {
+				data: {
+					role: sample(possibleRoles)
+				}
+			});
+		});
 	}
 
 	reconnect(playerId) {
@@ -136,20 +152,21 @@ export default class Game extends React.Component {
 						uid={this.props.uid}
 					/>
 				</Switch>
-				{this.state.started ? null : (
-					<div className="buttons">
-						<div className="btn start" onClick={this.startGame.bind(this)}>
-							Start Game
-						</div>
-						<div
-							className="btn leave"
-							onClick={() => this.leaveGame(this.props.uid)}
-						>
-							Leave Game
-						</div>
-					</div>
-				)}
 			</div>
 		);
 	}
 }
+
+// {this.state.started ? null : (
+// 	<div className="buttons">
+// 		<div className="btn start" onClick={this.startGame.bind(this)}>
+// 			Start Game
+// 		</div>
+// 		<div
+// 			className="btn leave"
+// 			onClick={() => this.leaveGame(this.props.uid)}
+// 			>
+// 			Leave Game
+// 		</div>
+// 	</div>
+// )}

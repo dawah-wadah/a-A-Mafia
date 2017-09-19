@@ -1,58 +1,81 @@
 import React from "react";
+import Promise from "es6-promise";
 
-import { app } from '../base.jsx';
+import { app } from "../base.jsx";
 
 export default class PlayerCard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			id: this.props.playerId,
+			id: this.props.uid,
 			gameId: this.props.gameId,
-			roleType: null,
+			roleType: "doctor",
 			role: {
 				ability: "healing",
 				image:
 					"https://i.pinimg.com/originals/26/4e/30/264e30439c42387c1e3c48d2d038429d.png",
 				allegiance: "town",
 				win_condition: "town wins",
-				description:
-					"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+				description: null
 			}
 		};
+		this.fetchRole = this.fetchRole.bind(this);
+		this.getUserId = this.getUserId.bind(this);
 	}
 
 	componentDidMount() {
-		this.fetchRole(this.state.id);
+		this.fetchRole(this.props.uid);
+	}
+	componentWillReceiveProps(nextProps) {
+		if (
+			this.props.uid !== nextProps.uid &&
+			this.state.role.description === null
+		) {
+			this.fetchRole(nextProps.uid);
+		}
 	}
 
+	getUserId() {}
+
 	fetchRole(id) {
-		app.database()
-			.ref("gamerooms" + this.state.gameId + this.state.id)
-			.once("value", snapshot => {
-				this.setState({
-					roleType: snapshot.val().role
-				});
-			})
-			.then(
-				app.database()
-					.ref("roles" + this.state.roleType)
-					.once("value", snapshot =>
-						this.setState({
-							role: snapshot.val()
+		if (id) {
+			app
+				.database()
+				.ref("gamerooms/" + this.state.gameId + "/players/" + id + "/role")
+				.once("value", snapshot => {
+					this.setState({
+						roleType: snapshot.val()
+					});
+				})
+				.then(
+					app
+						.database()
+						.ref("roles/" + this.state.roleType)
+						.once("value", snapshot => {
+							this.setState({
+								role: snapshot.val()
+							});
 						})
-					)
-			);
+				);
+		}
 	}
 
 	render() {
 		return (
-			<div className="playerCard">
-				<div className="playerCard-header">{this.state.roleType}</div>
-				<div className="player-image">
+			<div className="container top-buffer">
+				<div className="player-list-item header">{this.state.roleType}</div>
+				<div className="player-list-item allegiance">
+					Allegiance: {this.state.role.allegiance}
+				</div>
+				<div className="player-list-item image">
 					<img src={this.state.role.image} />
 				</div>
-				<div className="player-abilities">{this.state.role.abilities}</div>
-				<div className="player-description">{this.state.role.description}</div>
+				<div className="player-list-item player-abilities">
+					{this.state.role.abilities}
+				</div>
+				<div className="player-list-item player-description">
+					{this.state.role.description}
+				</div>
 			</div>
 		);
 	}
