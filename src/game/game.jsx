@@ -3,7 +3,7 @@ import { Switch } from "react-router-dom";
 import PropRoute from "../proproutes.jsx";
 import Lobby from "./lobby.jsx";
 import LiveGame from "./live_game.jsx";
-import { app } from "../base.jsx";
+import { app, base } from "../base.jsx";
 import "../css/lobby.css";
 import Modal from "../modal.jsx";
 import SignInModal from "./sign_in_modal.jsx";
@@ -19,38 +19,68 @@ export default class Game extends React.Component {
 		this.state = {
 			uid: this.props.uid,
 			open: false,
-			invite: false
+			invite: false,
+			location: this.props.match.params.id,
+			game: {
+				players: {},
+				phase: "",
+				start: null,
+				leader: "",
+				game_over: null
+			}
+
 		};
 		this.enableDisconnect = this.enableDisconnect.bind(this);
+		this.fetchGame = this.fetchGame.bind(this);
+		this.signalStart = this.signalStart.bind(this);
 	}
 
-	componentDidMount() {
-		console.log("Game Room Mounting");
-		this.reconnect(this.props.uid);
-		this.enableDisconnect(this.props.uid);
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (this.props.uid !== nextProps.uid) {
-			this.reconnect(nextProps.uid);
-			this.enableDisconnect(nextProps.uid);
+	fetchGame(location) {
+		if (location) {
+			base.syncState(`gamerooms/` + location, {
+				context: this,
+				state: "game"
+			});
 		}
 	}
 
-	componentWillUnmount() {
-		console.log("component shut down");
+	componentDidMount() {
+		if (this.state.uid) {
+			this.reconnect(this.state.uid);
+			this.enableDisconnect(this.state.uid);
+		}
+		this.fetchGame(this.state.location);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.state.uid !== nextProps.uid && nextProps.uid) {
+			this.setState({
+				uid: nextProps.uid
+			});
+			this.reconnect(nextProps.uid);
+			this.enableDisconnect(nextProps.uid);
+			this.fetchGame(nextProps.match.params.id);
+		}
+	}
+
+
+	signalStart() {
+		base.post(`gamerooms/${this.props.match.params.id}/start`, {
+			data: true
+		});
 	}
 
 	reconnect(playerId) {
 		console.log("reconnecting...");
 		if (playerId) {
-			userRef(this.props.match.params.id, playerId).on("value", snapshot => {
+			userRef(this.state.location, playerId).on("value", snapshot => {
 				if (snapshot.exists() && !snapshot.val().leftGame) {
-					userRef(this.props.match.params.id, playerId).update({
+					userRef(this.state.location, playerId).update({
 						active: true,
 						leftGame: false
 					});
 				} else {
+					console.log("not logged in");
 					this.setState({
 						open: true
 					});
@@ -62,10 +92,10 @@ export default class Game extends React.Component {
 	enableDisconnect(playerId) {
 		console.log("setting up disconnect");
 		if (playerId) {
-			let location = this.props.match.params.id;
+			let location = this.state.location;
 			app
 				.database()
-				.ref(`gamerooms/${this.props.match.params.id}/`)
+				.ref(`gamerooms/${this.state.location}/`)
 				.on("value", function(snapshot) {
 					if (snapshot.exists()) {
 						userRef(location, playerId)
@@ -79,7 +109,7 @@ export default class Game extends React.Component {
 	}
 
 	leaveGame(playerId) {
-		let id = this.props.match.params.id;
+		let id = this.state.location;
 		return new Promise((resolve, reject) => {
 			userRef(id, playerId)
 				.update({
@@ -111,58 +141,57 @@ export default class Game extends React.Component {
 	render() {
 		return (
 			<div className="game-view">
-				<div className='buttons'>
-
-				<div
-					className="btn red"
-					onClick={() => this.leaveGame(this.props.uid)}
+				<div className="buttons">
+					<div
+						className="btn red"
+						onClick={() => this.leaveGame(this.props.uid)}
 					>
-					Leave Game
+						Leave Game
+					</div>
+					<div className="btn blue" onClick={() => this.sendInvite()}>
+						Invite
+					</div>
 				</div>
-				<div className="btn blue" onClick={() => this.sendInvite()}>
-					Invite
+				<div className="container">
+					{this.state.open ? (
+						<Modal
+							open={true}
+							component={
+								<SignInModal
+									close={this.closeModal.bind(this)}
+									location={this.state.location}
+								/>
+							}
+						/>
+					) : null}
+					{this.state.open && this.state.invite ? (
+						<Modal
+							open={true}
+							component={<Invite close={this.closeModal.bind(this)} />}
+						/>
+					) : null}
+					<Switch>
+						<PropRoute
+							exact
+							path="/game/:id/"
+							component={Lobby}
+							uid={this.state.uid}
+							leader={this.state.game.leader}
+							start={this.state.game.start}
+							players={this.state.game.players}
+							startGame={() => this.signalStart()}
+						/>
+						<PropRoute
+							exact
+							path="/game/:id/game"
+							component={LiveGame}
+							uid={this.state.uid}
+							leader={this.state.game.leader}
+							start={this.state.game.start}
+							players={this.state.game.players}
+						/>
+					</Switch>
 				</div>
-			</div>
-				<div className='container'>
-
-				{this.state.open ? (
-					<Modal
-						open={true}
-						component={
-							<SignInModal
-								close={this.closeModal.bind(this)}
-								location={this.props.match.params.id}
-							/>
-						}
-					/>
-				) : null}
-				{this.state.open && this.state.invite ? (
-					<Modal
-						open={true}
-						component={
-							<Invite
-								close={this.closeModal.bind(this)}
-								location={this.props.match.url}
-							/>
-						}
-					/>
-				) : null}
-				<Switch>
-					<PropRoute
-						exact
-						path="/game/:id/"
-						component={Lobby}
-						uid={this.props.uid}
-					/>
-					<PropRoute
-						exact
-						path="/game/:id/game"
-						component={LiveGame}
-						uid={this.props.uid}
-					/>
-				</Switch>
-			</div>
-
 			</div>
 		);
 	}

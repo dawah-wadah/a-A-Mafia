@@ -11,40 +11,38 @@ export default class Lobby extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			id: this.props.match.params.id,
-			players: {},
-			leader: null,
-			start: false
+			location: this.props.match.params.id,
+			players: this.props.players,
+			leader: this.props.leader,
+			start: this.props.start
 		};
 		this.getGameLeader = this.getGameLeader.bind(this);
 		this.startGame = this.startGame.bind(this);
-		this.checkforGameStarted = this.checkforGameStarted.bind(this);
+		// this.checkforGameStarted = this.checkforGameStarted.bind(this);
 	}
 
 	componentDidMount() {
-		base.syncState(`gamerooms/${this.state.id}/players`, {
-			context: this,
-			state: "players"
-		});
-		this.getGameLeader(this.state.id);
-		this.checkforGameStarted();
+		this.getGameLeader(this.state.location);
+		// this.checkforGameStarted();
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.state.start !== nextProps.start && nextProps.start) {
+			this.setState({
+				start: nextProps.uid
+			});
+		}
 	}
 
 	checkforGameStarted() {
-		base.syncState(`/gamerooms/${this.props.match.params.id}/start`, {
-			context: this,
-			state: "start"
-		});
+		if(this.state.start){
+			this.props.history.push(`/game/${this.props.match.params.id}/game`);
+		}
 	}
 
-	signalStart() {
-		base.post(`gamerooms/${this.props.match.params.id}/start`, {
-			data: true
-		});
-	}
 
 	componentWillUpdate(nextProps, nextState) {
-		if (nextState.start === true && this.state.start === false) {
+		if (nextProps.start === true || this.state.start === true) {
 			this.props.history.push(`/game/${this.props.match.params.id}/game`);
 		}
 	}
@@ -61,7 +59,14 @@ export default class Lobby extends React.Component {
 	}
 
 	assignRoles(players) {
-		const possibleRoles = ["Doctor", "Killer", "Investigator", "Mafioso", "Jester", "Vigilante"];
+		const possibleRoles = [
+			"Doctor",
+			"Killer",
+			"Investigator",
+			"Mafioso",
+			"Jester",
+			"Vigilante"
+		];
 		let location = this.props.match.params.id;
 		values(players).forEach(player => {
 			base.post(`gamerooms/${location}/players/${player.uid}/role`, {
@@ -87,8 +92,8 @@ export default class Lobby extends React.Component {
 	}
 
 	startGame() {
-		this.signalStart();
-		this.assignRoles(this.state.players);
+		this.props.startGame();
+		this.assignRoles(this.props.players);
 		this.props.history.push(`/game/${this.props.match.params.id}/game`);
 	}
 
@@ -96,7 +101,7 @@ export default class Lobby extends React.Component {
 		let activePlayers = [];
 		let inactivePlayers = [];
 		let playersWhoLeft = [];
-		values(this.state.players).forEach(player => {
+		values(this.props.players).forEach(player => {
 			if (player) {
 				if (player.active) {
 					activePlayers.push(

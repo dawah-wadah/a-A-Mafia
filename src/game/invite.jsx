@@ -1,15 +1,17 @@
 import React from "react";
 import { NotificationManager } from "react-notifications";
 
-
-const Invite = ({close}) => {
-	const copyToClipboard = (action) => {
-		let copy = document.querySelector(".text-input");
+const Invite = ({ close }) => {
+	const copyToClipboard = action => {
+		let copy = document.getElementById("link");
 		copy.select();
-		let successful = document.execCommand("copy");
-		successful
-		? NotificationManager.info("Copied", "Success", 2000)
-		: NotificationManager.error("Unable to Copy", "Error", 2000);
+
+		try {
+			let copied = document.execCommand("copy");
+			copied ? NotificationManager.info("Copied", 'Success', 2000) : null;
+		} catch (err) {
+			NotificationManager.error("Unable to Copy", "Error", 2000);
+		}
 		action();
 	};
 	return (
@@ -18,6 +20,7 @@ const Invite = ({close}) => {
 			<form>
 				<input
 					readOnly
+					id="link"
 					className="text-input"
 					type="text"
 					value={window.location.href}

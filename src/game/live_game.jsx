@@ -1,6 +1,7 @@
 import React from "react";
 import { app, base } from "../base.jsx";
 import PlayerCard from "../users/player_card.jsx";
+import PlayerList from "../users/players_list.jsx";
 
 export default class LiveGame extends React.Component {
 	constructor(props) {
@@ -28,7 +29,7 @@ export default class LiveGame extends React.Component {
 			}
 		});
 	}
-
+	//
 	componentDidMount() {
 		this.signIn();
 		if (this.props.uid) {
@@ -38,6 +39,9 @@ export default class LiveGame extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.uid !== nextProps.uid) {
+			this.setState({
+				uid: nextProps.uid
+			});
 			this.syncWithServer(nextProps);
 		}
 	}
@@ -51,7 +55,10 @@ export default class LiveGame extends React.Component {
 
 	render() {
 		return (
-			<PlayerCard uid={this.state.uid} gameId={this.props.match.params.id} />
+			<div className="container">
+				<PlayerCard uid={this.state.uid} gameId={this.props.match.params.id} />
+				<PlayerList players={this.props.players} />
+			</div>
 		);
 	}
 }

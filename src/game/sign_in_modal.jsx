@@ -42,6 +42,7 @@ class SignInModal extends React.Component {
 				<form>
 					<input
 						onChange={e => this._handleChange(e, "name")}
+						className='text-input'
 						type="text"
 						placeholder="Name"
 					/>
