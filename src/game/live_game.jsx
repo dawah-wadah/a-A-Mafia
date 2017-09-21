@@ -57,9 +57,9 @@ export default class LiveGame extends React.Component {
 	render() {
 		return (
 			<div className="container">
+				<Timer/>
 				<PlayerCard uid={this.state.uid} gameId={this.props.match.params.id} />
 				<PlayerList players={this.props.players} />
-				<Timer/>
 			</div>
 		);
 	}

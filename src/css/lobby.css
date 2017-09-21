@@ -1,7 +1,7 @@
 .player-list-item {
 	min-height: 36px;
 	height: auto;
-	margin: 6px 12px;
+	margin: 24px 4px;
 	padding: 5px 26px;
 	color: rgba(0, 0, 0, 0.87);
 	border: 1px;
@@ -38,6 +38,10 @@
 	font-family: inherit;
 	line-height: inherit;
 	background-image: none;
+}
+
+.four {
+	margin: 4px;
 }
 
 .image {
