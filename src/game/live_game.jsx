@@ -2,6 +2,7 @@ import React from "react";
 import { app, base } from "../base.jsx";
 import PlayerCard from "../users/player_card.jsx";
 import PlayerList from "../users/players_list.jsx";
+import Timer from './timer.jsx';
 
 export default class LiveGame extends React.Component {
 	constructor(props) {
@@ -58,6 +59,7 @@ export default class LiveGame extends React.Component {
 			<div className="container">
 				<PlayerCard uid={this.state.uid} gameId={this.props.match.params.id} />
 				<PlayerList players={this.props.players} />
+				<Timer/>
 			</div>
 		);
 	}
