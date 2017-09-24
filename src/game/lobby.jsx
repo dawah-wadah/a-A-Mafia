@@ -1,6 +1,7 @@
 import React from "react";
 import { sample, values } from "lodash";
 import Promise from "es6-promise";
+import * as Util from "../utility.js";
 
 import { app, base } from "../base.jsx";
 
@@ -35,11 +36,10 @@ export default class Lobby extends React.Component {
 	}
 
 	checkforGameStarted() {
-		if(this.state.start){
+		if (this.state.start) {
 			this.props.history.push(`/game/${this.props.match.params.id}/game`);
 		}
 	}
-
 
 	componentWillUpdate(nextProps, nextState) {
 		if (nextProps.start === true || this.state.start === true) {
@@ -60,17 +60,21 @@ export default class Lobby extends React.Component {
 
 	assignRoles(players) {
 		const possibleRoles = [
+			"Sheriff",
 			"Doctor",
-			"Killer",
 			"Investigator",
+			"Godfather",
 			"Mafioso",
-			"Jester",
-			"Vigilante"
+			"Killer",
+			"Vigilante",
+			"Jester"
 		];
 		let location = this.props.match.params.id;
-		values(players).forEach(player => {
+		let allPlayers = values(players);
+		Util.shuffle(allPlayers);
+		allPlayers.forEach(player => {
 			base.post(`gamerooms/${location}/players/${player.uid}/role`, {
-				data: sample(possibleRoles)
+				data: possibleRoles.shift()
 			});
 		});
 	}

@@ -1,5 +1,5 @@
 import React from "react";
-import Util from "../utility.js";
+import * as Util from "../utility.js";
 import { NotificationManager } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { base, app } from "../base.jsx";

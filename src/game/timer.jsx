@@ -14,7 +14,7 @@ class Timer extends React.Component {
 	componentDidMount() {}
 
 	startTimer(time) {
-		let timeNow = new Date().getTime() + 31000;
+		let timeNow = new Date().getTime() + 1000 + time * 1000;
 		// var countDownDate = new Date(timeNow + 100000).getTime();
 		// let countDownDate = new Date("Sep 21, 2017 00:27:30").getTime();
 		let x = setInterval(() => {
@@ -43,8 +43,11 @@ class Timer extends React.Component {
 				<h2>
 					{this.state.min}:{this.state.sec}
 				</h2>
-				<div className="btn" onClick={() => this.startTimer()}>
+				<div className="btn" onClick={() => this.startTimer(30)}>
 					Start Timer
+				</div>
+				<div className="btn" onClick={() => this.startTimer(90)}>
+					Start Timer 90sec
 				</div>
 			</div>
 		);
