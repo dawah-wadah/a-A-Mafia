@@ -8,7 +8,9 @@ const Invite = ({ close }) => {
 
 		try {
 			let copied = document.execCommand("copy");
-			copied ? NotificationManager.info("Copied", 'Success', 2000) : null;
+			if (copied) {
+				NotificationManager.info("Copied", "Success", 2000);
+			}
 		} catch (err) {
 			NotificationManager.error("Unable to Copy", "Error", 2000);
 		}

@@ -1,5 +1,5 @@
 import React from "react";
-import { sample, values } from "lodash";
+import { values } from "lodash";
 import Promise from "es6-promise";
 import * as Util from "../utility.js";
 

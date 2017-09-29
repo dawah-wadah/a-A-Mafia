@@ -35,3 +35,21 @@ abilities : {
     investigate someone
   }
 }
+
+days : {
+  day: 15000,
+  discussion: 45000,
+  Voting: 30000,
+  Defense: 20000,
+  Judgement: 20000,
+  LastWords: 5000,
+  Night: 40000
+}
+
+dayCycle: [{phase: Day, time: 15000}
+{phase: 'Discussion', time: 45000}
+{phase: 'Voting', time: 30000}
+{phase: 'Defense', time: 20000}
+{phase: 'Judgement', time: 20000}
+{phase: 'Last Words', time: 5000}
+{phase: 'Night', time: 40000}]

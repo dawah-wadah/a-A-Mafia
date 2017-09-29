@@ -21,14 +21,15 @@ export default class Game extends React.Component {
 			open: false,
 			invite: false,
 			location: this.props.match.params.id,
+			leader: null,
 			game: {
 				players: {},
 				phase: "",
 				start: null,
-				leader: "",
-				game_over: null
+				leader: null,
+				game_over: null,
+				daylogs: null
 			}
-
 		};
 		this.enableDisconnect = this.enableDisconnect.bind(this);
 		this.fetchGame = this.fetchGame.bind(this);
@@ -36,11 +37,17 @@ export default class Game extends React.Component {
 	}
 
 	fetchGame(location) {
+		console.log("fetching game");
 		if (location) {
-			base.syncState(`gamerooms/` + location, {
-				context: this,
-				state: "game"
-			});
+			app
+				.database()
+				.ref("gamerooms/" + location)
+				.on("value", snapshot => {
+					this.setState({
+						game: snapshot.val(),
+						leader: snapshot.val().leader
+					});
+				});
 		}
 	}
 
@@ -62,7 +69,6 @@ export default class Game extends React.Component {
 			this.fetchGame(nextProps.match.params.id);
 		}
 	}
-
 
 	signalStart() {
 		base.post(`gamerooms/${this.props.match.params.id}/start`, {
@@ -186,9 +192,10 @@ export default class Game extends React.Component {
 							path="/game/:id/game"
 							component={LiveGame}
 							uid={this.state.uid}
-							leader={this.state.game.leader}
+							leader={this.state.leader}
 							start={this.state.game.start}
 							players={this.state.game.players}
+							daylogs={this.state.game.daylogs}
 						/>
 					</Switch>
 				</div>

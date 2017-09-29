@@ -75,29 +75,29 @@ export default class PlayerCard extends React.Component {
 	render() {
 		return (
 			<div className="container top-buffer player-list-item">
-				<h2>Role</h2>
+				<h2>Role Card</h2>
 				{this.state.roleFetch ? (
 					<div>
 						<div className="player-list-item header">
 							{this.state.roleType}
 						</div>
-						<div className="player-list-item allegiance">
-							<h4>Allegiance</h4>
-							{this.state.role.allegiance}
-						</div>
-						<div className="player-list-item win">
-							<h4>How to Win</h4>
-							{this.state.role.win_condition}
-						</div>
 						<div className="player-list-item image">
 							<img src={this.state.role.image} alt="pic" />
 						</div>
+						<div className="player-list-item allegiance">
+							<h2>Allegiance</h2>
+							{this.state.role.allegiance}
+						</div>
+						<div className="player-list-item win">
+							<h2>How to Win</h2>
+							{this.state.role.win_condition}
+						</div>
 						<div className="player-list-item player-abilities">
-							<h4>Abilities</h4>
+							<h2>Abilities</h2>
 							{this.state.role.abilities}
 						</div>
 						<div className="player-list-item player-description">
-							<h4>Description</h4>
+							<h2>Description</h2>
 							{this.state.role.description}
 						</div>
 					</div>

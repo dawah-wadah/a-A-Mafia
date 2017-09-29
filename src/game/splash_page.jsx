@@ -41,6 +41,7 @@ export default class Home extends React.Component {
 								role: null
 							}
 						},
+						countdownStarted: false,
 						phase: "day",
 						game_over: false,
 						leader: this.props.uid

@@ -1,8 +1,11 @@
 .player-list-item {
-	min-height: 36px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
 	height: auto;
+	min-height: 36px;
 	margin: 24px 4px;
-	padding: 5px 26px;
+	padding: 5px;
 	color: rgba(0, 0, 0, 0.87);
 	border: 1px;
 	border-radius: 2px;
@@ -11,106 +14,91 @@
 		0 3px 11px rgba(0, 0, 0, 0.2);
 	box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
 	text-transform: uppercase;
-	font-size: 24px;
 	letter-spacing: 0.03em;
-	-webkit-transition: all 0.2s ease-in-out;
 	-o-transition: all 0.2s ease-in-out;
+	-webkit-transition: all 0.2s ease-in-out;
 	transition: all 0.2s ease-in-out;
 	-ms-touch-action: manipulation;
 	touch-action: manipulation;
 }
 
 .text-input {
+	display: block;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	display: block;
-	background-color: transparent;
+	width: 100%;
+	padding: 10px;
 	color: rgba(0, 0, 0, 0.87);
 	border: none;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.26);
+	border-radius: 0;
+	background-image: none;
+	background-color: transparent;
 	outline: 0;
-	width: 100%;
-	padding: 10px;
 	-webkit-box-shadow: none;
 	box-shadow: none;
-	border-radius: 0;
-	font-size: 16px;
 	font-family: inherit;
+	font-size: 16px;
 	line-height: inherit;
-	background-image: none;
 }
 
 .four {
 	margin: 4px;
 }
 
-.image {
-	height: 60vh;
-}
 
 .image img {
-	height: 100%;
+	height: auto;
+	max-width: 100%;
 }
 
 .perform-ability-button {
-	box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
 	padding: 5px 26px;
-	border-radius: 2px;
 	color: rgba(0, 0, 0, 0.87);
-	/*font-size: 35px;*/
+	border-radius: 2px;
 	background-color: #62bdf5;
+	box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
 	cursor: pointer;
-
+	/* font-size: 35px; */
 }
 
-
-
 .btn {
-	box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	min-width: 94px;
 	min-height: 36px;
-	margin: 24px 4px;
+	margin: 5px;
 	padding: 0 26px;
 	color: rgba(0, 0, 0, 0.87);
 	overflow: hidden;
-	border: none;
-	border-radius: 2px;
-	background-image: none;
-	background-color: #fff;
-	text-align: center;
+	box-shadow: 0 0 14px rgba(0, 0, 0, 0.12), 0 3px 11px rgba(0, 0, 0, 0.2);
 	text-transform: uppercase;
-	vertical-align: middle;
-	font-family: inherit;
-	font-size: 14px;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 18px;
 	line-height: 36px;
+	line-height: 18px;
 	letter-spacing: 0.03em;
 	animation-duration: 0.0001s;
 	animation-name: mui-btn-inserted;
-	-webkit-transition: all 0.2s ease-in-out;
 	transition: all 0.2s ease-in-out;
-	-ms-touch-action: manipulation;
 	touch-action: manipulation;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	-webkit-user-select: none;
+
 	user-select: none;
 	cursor: pointer;
 }
 
+
 .yellow {
-	background-color: #FFA
+	background-color: #ffa;
 }
 
 .blue {
+	color: white;
 	background-color: #62bdf5;
-	color: white;
 }
+
 .red {
-	background-color: #e24825;
 	color: white;
+	background-color: #e24825;
 }
 
 .top-buffer {
@@ -144,11 +132,17 @@
 	justify-content: space-between;
 }
 
+.container .container {
+	border: 2px solid black;
+	background-image: url("http://download.4-designer.com/files/20130108/The-wood-background-HD-picture-5-40976.jpg");
+}
+
 .container {
 	display: flex;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	padding: 25px 15px;
+	max-width: 600px;
+	padding: 10px;
 	flex-direction: column;
 	justify-content: center;
 }
@@ -173,7 +167,7 @@
 .modal {
 	width: 400px;
 	height: 300px;
-	border-radius: 5px;
 	margin: 100px auto;
+	border-radius: 5px;
 	background-color: rgb(255, 255, 255);
 }
