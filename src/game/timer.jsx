@@ -95,18 +95,18 @@ class Timer extends React.Component {
 		return (
 			<div className="container timer flex">
 				<h2>{this.state.phase}</h2>
-				<h2>
+				<h1>
 					{this.state.min}:{this.state.sec}
-				</h2>
-				<div className="btn" onClick={() => this.startTimer(30)}>
-					Start Timer
-				</div>
-				<div className="btn" onClick={() => this.startTimer(90)}>
-					Start Timer 90sec
-				</div>
+				</h1>
 			</div>
 		);
 	}
 }
+// <div className="btn" onClick={() => this.startTimer(30)}>
+// 	Start Timer
+// </div>
+// <div className="btn" onClick={() => this.startTimer(90)}>
+// 	Start Timer 90sec
+// </div>
 
 export default Timer;

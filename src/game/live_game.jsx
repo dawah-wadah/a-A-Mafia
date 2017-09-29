@@ -46,7 +46,12 @@ export default class LiveGame extends React.Component {
 				dayCount: this.state.dayCount + 1
 			});
 		}
-		this.signalTimerStarted(this.props.match.params.id);
+		var gameRef = app
+			.database()
+			.ref("/gamerooms/" + this.props.match.params.id + "/countdownStarted")
+			.set(false);
+		// this.signalTimerStarted(this.props.match.params.id);
+		this.sendTime(this.state.isLeader);
 	}
 
 	signalTimerStarted(locations) {
@@ -91,8 +96,8 @@ export default class LiveGame extends React.Component {
 		if (this.props.leader) {
 			var val = this.iAmTheLeader(this.props);
 			this.syncWithServer(this.props);
-			// this.sendTime(val);
-			this.signalTimerStarted(this.props.match.params.id);
+			this.sendTime(val);
+			// this.signalTimerStarted(this.props.match.params.id);
 		}
 	}
 
@@ -113,8 +118,8 @@ export default class LiveGame extends React.Component {
 		) {
 			var val = this.iAmTheLeader(nextProps);
 			this.syncWithServer(nextProps);
-			// this.sendTime(val);
-			this.signalTimerStarted(nextProps.match.params.id);
+			this.sendTime(val);
+			// this.signalTimerStarted(nextProps.match.params.id);
 		}
 	}
 
