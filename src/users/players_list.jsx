@@ -2,9 +2,6 @@ import React from "react";
 import { values } from "lodash";
 
 class PlayerList extends React.Component {
-	constructor(props) {
-		super(props);
-	}
 
 	componentDidMount() {}
 

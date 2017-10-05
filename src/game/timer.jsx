@@ -24,17 +24,17 @@ class Timer extends React.Component {
 		this.clearAllIntervals();
 	}
 
-	startCycle() {
-		var dayCycle = [
-			{ phase: "Day", time: 15000 },
-			{ phase: "Discussion", time: 45000 },
-			{ phase: "Voting", time: 30000 },
-			{ phase: "Defense", time: 20000 },
-			{ phase: "Judgement", time: 20000 },
-			{ phase: "Last Words", time: 5000 },
-			{ phase: "Night", time: 40000 }
-		];
-	}
+	// startCycle() {
+	// 	var dayCycle = [
+	// 		{ phase: "Day", time: 15000 },
+	// 		{ phase: "Discussion", time: 45000 },
+	// 		{ phase: "Voting", time: 30000 },
+	// 		{ phase: "Defense", time: 20000 },
+	// 		{ phase: "Judgement", time: 20000 },
+	// 		{ phase: "Last Words", time: 5000 },
+	// 		{ phase: "Night", time: 40000 }
+	// 	];
+	// }
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.day !== nextProps.day) {
@@ -102,11 +102,6 @@ class Timer extends React.Component {
 		);
 	}
 }
-// <div className="btn" onClick={() => this.startTimer(30)}>
-// 	Start Timer
-// </div>
-// <div className="btn" onClick={() => this.startTimer(90)}>
-// 	Start Timer 90sec
-// </div>
+
 
 export default Timer;

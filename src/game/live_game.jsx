@@ -1,5 +1,5 @@
 import React from "react";
-import { app, base } from "../base.jsx";
+import { app } from "../base.jsx";
 import PlayerCard from "../users/player_card.jsx";
 import PlayerList from "../users/players_list.jsx";
 import Timer from "./timer.jsx";
@@ -46,7 +46,7 @@ export default class LiveGame extends React.Component {
 				dayCount: this.state.dayCount + 1
 			});
 		}
-		var gameRef = app
+		app
 			.database()
 			.ref("/gamerooms/" + this.props.match.params.id + "/countdownStarted")
 			.set(false);
