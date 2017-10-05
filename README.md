@@ -6,7 +6,7 @@ a/A Mafia bridges the gap between mafia and ToS by operating on a device everyon
 
 ## Getting Started
 
-Once the game has started, players are challenged on their ability to convincingly lie as well as detect when other players are lying. The game is played live, and can range from 7 to 15 players. Upon entering a game, players will randomly assigned to groups - Town, Mafia, and Neutrals.
+Once the game has started, players are challenged on their ability to convincingly lie as well as detect when other players are lying. The game is played live, and can range from 2-10. Upon entering a game, players will randomly assigned to groups - Town, Mafia, and Neutrals.
 
 <p align='center'>Lobby</p>
 <div align='center'>
