@@ -4,6 +4,7 @@ import { NotificationManager } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { base, app } from "../base.jsx";
 import Promise from "es6-promise";
+import Role from "../roles/role.js";
 
 export default class Home extends React.Component {
 	constructor(props) {
@@ -26,6 +27,9 @@ export default class Home extends React.Component {
 	}
 
 	_makeGame() {
+		let name = this.state.name;
+		let uid = this.state.uid;
+		let role = null;
 		if (this._userHasAName()) {
 			let id = Util.makeId(8);
 			base
@@ -34,11 +38,12 @@ export default class Home extends React.Component {
 						start: false,
 						players: {
 							[this.state.uid]: {
-								name: this.state.name,
-								uid: this.state.uid,
+								name,
+								uid,
 								active: true,
 								leftGame: false,
-								role: null
+								role,
+								stats: {}
 							}
 						},
 						countdownStarted: false,

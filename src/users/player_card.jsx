@@ -2,10 +2,12 @@ import React from "react";
 
 import { app } from "../base.jsx";
 
+// const userRef = (location, uid) =>
+// 	app.database().ref("/gamerooms/" + location + "/players/" + uid + "/role");
+
 const userRef = (location, uid) =>
-	app.database().ref("/gamerooms/" + location + "/players/" + uid + "/role");
-// const userRefString = (location, uid) =>
-// 	"/gamerooms/" + location + "/players/" + uid + "/role";
+	app.database().ref("/gamerooms/" + location + "/players/" + uid );
+
 
 export default class PlayerCard extends React.Component {
 	constructor(props) {
@@ -21,6 +23,7 @@ export default class PlayerCard extends React.Component {
 				win_condition: "",
 				description: ""
 			},
+			stats : {},
 			roleFetch: false
 		};
 		this.fetchRole = this.fetchRole.bind(this);
@@ -47,13 +50,14 @@ export default class PlayerCard extends React.Component {
 			userRef(location, id)
 				.once("value", snapshot => {
 					this.setState({
-						roleType: snapshot.val()
+						roleType: snapshot.val().role,
+						stats: snapshot.val().stats
 					});
 				})
 				.then(data => {
 					app
 						.database()
-						.ref(`roles/${data.val()}`)
+						.ref(`roles/${data.val().role}`)
 						.once("value", info => {
 							this.setState({
 								role: info.val()

@@ -2,6 +2,7 @@ import React from "react";
 import { values } from "lodash";
 import Promise from "es6-promise";
 import * as Util from "../utility.js";
+import Role from "../roles/role.js";
 
 import { app, base } from "../base.jsx";
 
@@ -73,8 +74,15 @@ export default class Lobby extends React.Component {
 		let allPlayers = values(players);
 		Util.shuffle(allPlayers);
 		allPlayers.forEach(player => {
+			let roleType = possibleRoles.shift();
 			base.post(`gamerooms/${location}/players/${player.uid}/role`, {
-				data: possibleRoles.shift()
+				data: roleType
+			});
+			base.post(`gamerooms/${location}/players/${player.uid}/stats`, {
+				data: new Role({
+					name: player.name,
+					roleType
+				})
 			});
 		});
 	}

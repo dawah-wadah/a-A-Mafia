@@ -1,7 +1,5 @@
 export default class Role {
   constructor(options){
-    this.name = options.name;
-    this.roleType= options.roleType;
     this.isDead = false;
     this.isAttacked = false;
     this.isProtected = false;
